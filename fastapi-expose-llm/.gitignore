@@ -11,3 +11,6 @@ wheels/
 
 # Ignore env file
 .env
+
+# Ignore uv.lock file
+uv.lock

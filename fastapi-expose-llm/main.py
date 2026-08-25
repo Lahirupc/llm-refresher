@@ -1,10 +1,11 @@
 import os
 import logging
 from dotenv import load_dotenv
-from fastapi import FastAPI
-from pydantic import BaseModel
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel, Field
 from langchain_google_genai import ChatGoogleGenerativeAI
 from logging import getLogger
+from langchain_core.output_parsers import PydanticOutputParser
 
 # Load environment variables from .env
 load_dotenv()
@@ -22,6 +23,7 @@ api_key = os.environ.get("GOOGLE_API_KEY")
 
 app = FastAPI(title="Text Processing API")
 
+# disable AFC
 model = ChatGoogleGenerativeAI(
     model="gemini-3.6-flash",
     # stream_usage=True,
@@ -43,7 +45,14 @@ class TextRequest(BaseModel):
     text: str
 
 class TextResponse(BaseModel):
-    text: str
+    translated_text: str = Field(
+            description="Translated user sentence"
+        )
+    is_formal: bool = Field(
+        description="Whether the translated text is formal"
+    )
+
+structured_model = model.with_structured_output(TextResponse, method="json_mode")
 
 @app.post("/question", response_model=TextResponse)
 async def handle_text(request: TextRequest):
@@ -58,11 +67,20 @@ async def handle_text(request: TextRequest):
     ("human", request.text),
     ]
 
-    try: 
-        ai_msg = await model.ainvoke(messages)
+    try:
+        output_parser = PydanticOutputParser(pydantic_object=TextResponse)
+        format_instructions = output_parser.get_format_instructions()
+        logger.info(f"Format instructions: {format_instructions}")
+
+        ai_msg = await structured_model.ainvoke(f"{messages} {format_instructions}")
+
         logger.info("Successfully received response from LLM")
-        logger.debug(f"LLM content: {ai_msg.content}")
-        return TextResponse(text=f"{ai_msg.content[0]['text']}")
+        logger.debug(ai_msg)
+        # enforce the response model
+        return TextResponse(
+            translated_text=ai_msg.translated_text,
+            is_formal=ai_msg.is_formal
+        )
     except Exception as e:
         logger.error(f"Error invoking LLM: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail="Internal server error calling LLM")
