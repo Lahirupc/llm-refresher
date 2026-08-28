@@ -12,10 +12,8 @@ from langchain_core.tools import tool
 load_dotenv()
 
 # Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-)
+logging.basicConfig(format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+logging.getLogger().setLevel(logging.DEBUG)
 
 logger = logging.getLogger(__name__)
 
@@ -111,9 +109,10 @@ def handle_text(request: TextRequest):
         output_parser = PydanticOutputParser(pydantic_object=TextResponse)
         format_instructions = output_parser.get_format_instructions()
         structured_response = structured_model.invoke(f"{messages} {format_instructions}")
+        logger.debug(f"translate - request: {messages} {format_instructions}")
 
         logger.info("Successfully received response from LLM")
-        logger.debug(f"Api response: {structured_response}")
+        logger.debug(f"translate - response: {structured_response}")
         # enforce the response model
         return TextResponse(
             translated_text=structured_response.translated_text,
@@ -144,11 +143,10 @@ def handle_text(request: TextRequest):
         output_parser = PydanticOutputParser(pydantic_object=CalculatedResponse)
         format_instructions = output_parser.get_format_instructions()
         structured_response = structured_model.invoke(f"{messages} {format_instructions}")
-        print(f"{messages} {format_instructions}")
+        logger.debug(f"calculate - request: {messages} {format_instructions}")
 
         logger.info("Successfully received response from LLM")
-        print(structured_response)
-        logger.debug(f"Api response: {structured_response}")
+        logger.debug(f"calculate - response: {structured_response}")
         # enforce the response model
         return CalculatedResponse(
             result=structured_response.result,
