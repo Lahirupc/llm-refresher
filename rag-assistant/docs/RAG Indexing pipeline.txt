@@ -1,0 +1,69 @@
+# Document Loading
+ - Extract text from various files
+ - Handle different formats (PDF, TXT, DOCX, etc.)
+
+Text Splitting
+ - Chunk into 500 - 1000 char pieces
+ - Preserve sentence boundaries
+ - Add overlap of 100 - 200 chars
+
+Embedding Generation
+ - Convert text chunks into vectors
+ - Use embedding model (e.g., OpenAI embeddings, Cohere API, Sentence Transformers)
+
+Vector Storage
+ - Store embeddings in vector database
+ - Index vector embeddings
+
+# Chunking
+Fixed chunking is bad. Use semantic chunking. Chucking affects quality.
+1. Chunk size (sweet spot 200-1000 chars)
+2. Chunk overlap (10-20% overlap preserves context)
+3. Split boundaries (fixed/recursive/semantic - best)
+4. Content type - each content type needs different chunking strategy (e.g. code, tables, legal, mark down, etc.)
+
+## Chunking Strategies
+1. Fixed-size chunking - never use in production
+2. Recursive chunking - good for general purpose (80% RAG systems use this)
+3. Semantic chunking (split when the sentence embedding similarity drops) - best for domain specific knowledge
+
+## Traditional Chunking vs Late Chunking
+
+Traditional chunking 
+    - split based on the document structure (e.g. paragraphs, sentences, etc.)
+Late chunking 
+    - split based on the semantic similarity of the sentences (e.g. chunk 5 embedding includes full document context)
+    - improves accuracy by 10%-12%
+    - used for utting edge cases
+
+## Chunking decision framework
+
+[Start]
+    | 
+    v
+[Prototyping quickly] (yes) -> Recursive chunking
+    | (no)
+    v
+[Simple, structured docs] (yes) -> Recursive chunking
+    | (no)
+    v
+[Quality is critical] (yes) -> Semantic chunking
+    | (no)
+    v
+[Complex, topic-shifting docs] (yes) -> Semantic chunking
+    | (no)
+    v
+Recursive chunking
+
+
+### Quick reference
+| Content Type | Stratergy | Chunk size |
+|------|------|------|
+| General docs | Recursive chunking | 500-1000 chars |
+| Code | code splitter | Function |
+| Technical | Semantic chunking | Auto |
+| Mark down | MD Splitter | Headers |
+
+
+
+
