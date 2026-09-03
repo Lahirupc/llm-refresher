@@ -34,4 +34,5 @@ data = response.json()
 embedding = data["data"][0]["embedding"]
 print(f"Embedding dimension: {len(embedding)}")
 # print(embedding)
-# print(data)
+print(data)
+print(data["data"][0]["embedding"])
