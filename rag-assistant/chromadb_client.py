@@ -29,6 +29,7 @@ def compute_similarity():
     # similarity = 1/ (1 + distance)
     # or
     # similarity = 1 - (distance / max_distance)
+    results = collection.query(query_texts=["quick brown fox"], n_results=2)
     for distance in results['distances'][0]:
         similarity = 1 / (1 + distance)
         similarity_scores.append(similarity)
