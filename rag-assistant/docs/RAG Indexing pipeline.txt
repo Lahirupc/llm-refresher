@@ -1,8 +1,10 @@
-# Document Loading
+# RAG Indexing pipeline
+
+Document Loading
  - Extract text from various files
  - Handle different formats (PDF, TXT, DOCX, etc.)
 
-Text Splitting
+Text Splitting / Chunking
  - Chunk into 500 - 1000 char pieces
  - Preserve sentence boundaries
  - Add overlap of 100 - 200 chars
@@ -15,19 +17,19 @@ Vector Storage
  - Store embeddings in vector database
  - Index vector embeddings
 
-# Chunking
+## Chunking
 Fixed chunking is bad. Use semantic chunking. Chucking affects quality.
 1. Chunk size (sweet spot 200-1000 chars)
 2. Chunk overlap (10-20% overlap preserves context)
 3. Split boundaries (fixed/recursive/semantic - best)
 4. Content type - each content type needs different chunking strategy (e.g. code, tables, legal, mark down, etc.)
 
-## Chunking Strategies
+### Chunking Strategies
 1. Fixed-size chunking - never use in production
 2. Recursive chunking - good for general purpose (80% RAG systems use this)
 3. Semantic chunking (split when the sentence embedding similarity drops) - best for domain specific knowledge
 
-## Traditional Chunking vs Late Chunking
+### Traditional Chunking vs Late Chunking
 
 Traditional chunking 
     - split based on the document structure (e.g. paragraphs, sentences, etc.)
@@ -36,7 +38,7 @@ Late chunking
     - improves accuracy by 10%-12%
     - used for utting edge cases
 
-## Chunking decision framework
+### Chunking decision framework
 
 [Start]
     | 
@@ -56,7 +58,7 @@ Late chunking
 Recursive chunking
 
 
-### Quick reference
+#### Quick reference
 | Content Type | Stratergy | Chunk size |
 |------|------|------|
 | General docs | Recursive chunking | 500-1000 chars |
@@ -65,5 +67,10 @@ Recursive chunking
 | Mark down | MD Splitter | Headers |
 
 
+## Embedding
+ - Use same embedding model everywhere (indexing and retrival)
+ - Embedding quality > quantity
+ - Test retrival seperately
 
 
+## Storing
