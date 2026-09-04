@@ -9,3 +9,41 @@ When chunking with RecursiveCharacterTextSplitter, chuck_overlap occurs only whe
 
 ## Why Overlapping matters
 Without overlap documents might loose context cause a porobable retreval miss
+
+## Vector search completely when 
+ - Product codes (FA-70R has no meaning to the embedding model)
+ - Acronyms
+ - Error codes
+ - Exact names (Semantics override specifics)
+
+ ## Vector search vs BM25: Complementary Strengths
+Vector search is good at:
+ ^ Semantic similarity
+ ^ Synonyms
+ ^ Natural questions
+ 
+BM25 search is good at:
+ ^ Exact matches
+ ^ Rare terms
+ ^ Codes and IDs
+
+
+## Hybrid Search pipeline
+This is vector search and BM25 search done in paralell and combining the rankings (Reciprocal rank fusion)
+This is good for:
+ - data with codes/IDs
+ - technical documentation
+ - legal documents
+ - mixed query types
+- accuracy is critical
+
+## Skip Hybrid search
+ - Simple Q&A bot
+ - Creative writing assistant
+ - Quick prototypes
+ - Latency critical (adds ~20-50ms)
+
+
+
+
+
