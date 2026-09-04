@@ -1,0 +1,6 @@
+1. Bad chunking
+2. Embedding mismatch (query vector vs document vector)
+3. Retreval noise (retriving 10 documents and 7 are not relevant)
+4. Context overflow (since the context is trunkated the answer is incomplete)
+5. Hallucination (despite provided context)
+

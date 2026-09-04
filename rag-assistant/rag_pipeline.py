@@ -8,54 +8,13 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_core.documents import Document
 from langchain_chroma import Chroma
 from langchain_openrouter import ChatOpenRouter
+from open_router import OpenRouterEmbeddings
+
 load_dotenv()
 
 # read .md file as knowledge base
 with open("./docs/langchain_knowledge_base.md", "r", encoding="utf-8") as f:
     KNOWLEDGE_BASE = f.read()
-
-class OpenRouterEmbeddings(Embeddings):
-    def __init__(self, model: str = "liquid/lfm-2.5-embedding-350m:free"):
-        self.model = model
-
-    def embed_documents(self, texts: list[str]) -> list[list[float]]:
-        """Embed search docs.
-
-        Args:
-            texts: List of text to embed.
-
-        Returns:
-            List of embeddings.
-        """
-        import requests
-        import os
-
-        response = requests.post(
-            "https://openrouter.ai/api/v1/embeddings",
-            headers={
-                "Authorization": f"Bearer {os.getenv('OPENROUTER_API_KEY')}",
-                "Content-Type": "application/json",
-            },
-            json={
-                "model": self.model,
-                "input": texts
-            }
-        )
-
-        data = response.json()
-        embeddings = [item["embedding"] for item in data["data"]]
-        return embeddings
-
-    def embed_query(self, text: str) -> list[float]:
-        """Embed query text.
-
-        Args:
-            text: Text to embed.
-
-        Returns:
-            Embedding.
-        """
-        return self.embed_documents([text])[0]
 
 embeddings_model = OpenRouterEmbeddings(model="liquid/lfm-2.5-embedding-350m:free")
 
