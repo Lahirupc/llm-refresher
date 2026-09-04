@@ -4,3 +4,8 @@
 4. Context overflow (since the context is trunkated the answer is incomplete)
 5. Hallucination (despite provided context)
 
+## Text Overlapping
+When chunking with RecursiveCharacterTextSplitter, chuck_overlap occurs only when the text is split mid sentence.
+
+## Why Overlapping matters
+Without overlap documents might loose context cause a porobable retreval miss
