@@ -1,0 +1,18 @@
+# BM25 Rebuild
+ - dosn't support incremental 
+ - rebuild when adjusting documents
+
+# Tune Weights
+ - start 50/50
+ - adjust based on query patterns
+ - monitor which retriever contributes
+
+# K Value
+ - retrieve more, let RRF support
+ - k=4 or higher recommended
+
+# Latency
+ - hybrid adds ~20-50ms
+ - two searches instead of one
+ - worth it for accuracy
+ 
