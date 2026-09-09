@@ -17,3 +17,6 @@ uv.lock
 
 # Chroma_db persistent storage
 chroma_db
+
+# mlflow db
+mlflow.db
