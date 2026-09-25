@@ -20,3 +20,6 @@ chroma_db
 
 # mlflow db
 mlflow.db
+
+# vscode settings
+.vscode
